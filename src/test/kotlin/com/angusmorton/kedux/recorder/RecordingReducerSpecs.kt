@@ -55,7 +55,7 @@ class RecordingReducerSpecs : Spek() {
             val initialState = RecordingState(
                     TestState(2),
                     listOf(TestState(2), TestState(3), TestState(4)),
-                    listOf(TestAction(PLUS_ACTION, 1), TestAction(PLUS_ACTION, 1), TestAction(PLUS_ACTION, 1)),
+                    listOf(TestAction(INIT_ACTION), TestAction(PLUS_ACTION, 1), TestAction(PLUS_ACTION, 1)),
                     2,
                     emptySet())
 
@@ -119,6 +119,19 @@ class RecordingReducerSpecs : Spek() {
 
                 it ("should set the current state index correctly") {
                     assertEquals(1, resultState.currentStateIndex)
+                }
+            }
+
+            on("receiving a toggle action for an action that is currently active") {
+                val recordingAction = RecordingAction.toggle(1)
+                val resultState = recordingReducer(initialState, recordingAction)
+
+                it("should not apply the action at that index") {
+                    assertEquals(TestState(3), resultState.computedStates[2])
+                }
+
+                it("should contain the same number of states") {
+                    assertEquals(3, resultState.computedStates.size)
                 }
             }
         }

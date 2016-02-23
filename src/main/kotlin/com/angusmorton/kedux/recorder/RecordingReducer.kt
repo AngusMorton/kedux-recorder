@@ -28,26 +28,41 @@ internal inline fun <S : State> createRecordingReducer(initialState: S, initActi
 
             stagedActions = stagedActions.plus(recordingAction.wrappedAction)
         }
+
         RecordingAction.DEVTOOL_ACTION_RESET -> {
             committedState = initialState
             stagedActions = listOf(initAction)
             skippedActionsIndexes = emptySet()
             currentStateIndex = 0
         }
+
         RecordingAction.DEVTOOL_ACTION_COMMIT -> {
             committedState = recordingState.computedStates[currentStateIndex]
             stagedActions = listOf(initAction)
             skippedActionsIndexes = emptySet()
             currentStateIndex = 0
         }
+
         RecordingAction.DEVTOOL_ACTION_ROLLBACK -> {
             stagedActions = listOf(initAction)
             skippedActionsIndexes = emptySet()
             currentStateIndex = 0
         }
+
         RecordingAction.DEVTOOL_ACTION_JUMP_TO_STATE -> {
-            currentStateIndex = recordingAction.jumpIndex ?: currentStateIndex
+            currentStateIndex = recordingAction.index ?: currentStateIndex
         }
+
+        RecordingAction.DEVTOOL_ACTION_TOGGLE -> {
+            if (recordingAction.index == null) throw IllegalArgumentException("recordingAction.index == null ($recordingAction)");
+
+            if (skippedActionsIndexes.contains(recordingAction.index)) {
+                skippedActionsIndexes = skippedActionsIndexes.minus(recordingAction.index)
+            } else {
+                skippedActionsIndexes = skippedActionsIndexes.plus(recordingAction.index)
+            }
+        }
+
         else -> throw IllegalArgumentException("Unhandled action: $recordingAction")
     }
 

@@ -12,9 +12,7 @@ class RecordingStoreSpec : Spek() {
             on("receiving an app action") {
                 val recordingStore = RecordingStore.create(initAction, initialState, counterReducer)
                 val action = TestAction(PLUS_ACTION, 1)
-                println("before ${recordingStore.currentState()}")
                 recordingStore.dispatch(action)
-                println("after ${recordingStore.currentState()}")
 
                 it("should have changed state") {
                     assertEquals(TestState(1), recordingStore.currentState())
