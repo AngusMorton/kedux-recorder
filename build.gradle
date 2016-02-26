@@ -1,3 +1,10 @@
+group GROUP
+version VERSION_NAME
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+apply from: file('gradle/gradle-mvn-push.gradle')
+
 buildscript {
     ext.kotlin_version = '1.0.0'
     repositories { jcenter() }
@@ -6,13 +13,9 @@ buildscript {
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'kotlin'
-
 repositories {
     jcenter()
     maven { url "http://repository.jetbrains.com/all" }
-    maven { url  "http://jcenter.bintray.com" }
 }
 
 dependencies {
@@ -23,6 +26,7 @@ dependencies {
     testCompile "junit:junit:4.11"
     testCompile "org.jetbrains.spek:spek:0.1.195"
 }
+
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
 }
